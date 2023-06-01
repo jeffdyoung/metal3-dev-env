@@ -93,6 +93,10 @@
         - item is failed
       with_items: "{{ vm_vol_check.results }}"
 
+    - name: Format vm qcow2 v3
+      command: >
+        qemu-img amend -o compat=v3 {{ libvirt_volume_path }}/'{{ item.item.name }}'.qcow2 
+      with_items: "{{ vm_vol_check.results }}"
     # Define (but do not start) the vm nodes.  These will be
     # booted later by ironic during the provisioning process.
     - name: Define vm vms
