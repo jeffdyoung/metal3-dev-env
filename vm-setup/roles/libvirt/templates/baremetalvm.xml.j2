@@ -22,7 +22,9 @@
 {% endif %}
     <boot dev='network'/>
     <bootmenu enable='no'/>
+{% if libvirt_arch != 'ppc64le' %}
     <bios useserial='yes' rebootTimeout='10000'/>
+{% endif %}
   </os>
 {% else %}
 <os firmware='efi'>
@@ -72,12 +74,10 @@
 {% endif %}
     </interface>
 {% endfor %}
-{% if libvirt_arch != 'ppc64le' %}
     <serial type='pty'>
       <log file="{{ libvirt_log_path }}/{{ item.name }}-serial0.log" append="on"/>
     </serial>
     <console type='pty'/>
-{% endif %}
 {% if enable_vnc_console|bool %}
     <input type='mouse' bus='ps2'/>
     <graphics type='vnc' port='-1' autoport='yes'/>
