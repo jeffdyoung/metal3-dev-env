@@ -7,6 +7,9 @@
 
 {% if libvirt_arch != 'aarch64' %}
   <os>
+  {% if libvirt_arch == 'ppc64le' %}
+    <type arch='{{ libvirt_arch }}' machine='pseries-rhel8.6.0'>hvm</type>
+  {% else %}
     <type arch='{{ libvirt_arch }}' machine='q35'>hvm</type>
 {% if libvirt_firmware  == 'uefi' %}
      <loader readonly='yes' type='pflash'>/usr/share/OVMF/OVMF_CODE.fd</loader>
