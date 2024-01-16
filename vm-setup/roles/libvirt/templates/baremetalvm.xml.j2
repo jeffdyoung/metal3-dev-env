@@ -83,8 +83,13 @@
     </serial>
     <console type='pty'/>
 {% if enable_vnc_console|bool %}
+{% if libvirt_arch == 'ppc64le' %}
+    <target type='serial' port='0'/>
+    <address type='spapr-vio' reg='0x30000000'/>
+{% else %}
     <input type='mouse' bus='ps2'/>
     <graphics type='vnc' port='-1' autoport='yes'/>
+{% endif %}
     <video>
 {% if libvirt_arch == 'ppc64le' %}
       <model type='vga' vram='16384' heads='1' primary='yes' />
