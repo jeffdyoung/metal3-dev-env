@@ -48,7 +48,11 @@
   <on_crash>restart</on_crash>
   <devices>
     <disk type="file" device="cdrom">
+{% if libvirt_arch == 'ppc64le' %}
+      <target dev='{{ libvirt_cdromdev }}' bus='{{ libvirt_diskbus }}'/>
+{% else %}
       <target dev='{{ libvirt_cdromdev }}' bus='{{ libvirt_cdrombus }}'/>
+{% endif %}
       <readonly/>
     </disk>
     <disk type='volume' device='disk'>
