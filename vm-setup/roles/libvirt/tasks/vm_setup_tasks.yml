@@ -95,13 +95,42 @@
 
     # Define (but do not start) the vm nodes.  These will be
     # booted later by ironic during the provisioning process.
-    - name: Define vm vms
+    - name: Define x86_64 vm vms
       virt:
         name: "{{ item.name }}"
         command: define
-        xml: "{{ lookup('template', 'baremetalvm.xml.j2') }}"
+        xml: "{{ lookup('template', 'baremetalvm-x86_64.xml.j2') }}"
         uri: "{{ libvirt_uri }}"
       with_items: "{{ vm_nodes }}"
+      when:
+        - libvirt_arch == x86_64
+    - name: Define aarch64 vm vms
+      virt:
+        name: "{{ item.name }}"
+        command: define
+        xml: "{{ lookup('template', 'baremetalvm-aarch64.xml.j2') }}"
+        uri: "{{ libvirt_uri }}"
+      with_items: "{{ vm_nodes }}"
+      when:
+        - libvirt_arch == aarch64
+    - name: Define ppc64le vm vms
+      virt:
+        name: "{{ item.name }}"
+        command: define
+        xml: "{{ lookup('template', 'baremetalvm-ppc64le.xml.j2') }}"
+        uri: "{{ libvirt_uri }}"
+      with_items: "{{ vm_nodes }}"
+      when:
+        - libvirt_arch == ppc64le
+    - name: Define s390x vm vms
+      virt:
+        name: "{{ item.name }}"
+        command: define
+        xml: "{{ lookup('template', 'baremetalvm-s390x.xml.j2') }}"
+        uri: "{{ libvirt_uri }}"
+      with_items: "{{ vm_nodes }}"
+      when:
+        - libvirt_arch == s390x
 
     # Create additional blockdevices for each objectstorage flavor node
     # These are sparse files, not using space if unused
