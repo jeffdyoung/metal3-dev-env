@@ -1,60 +1,24 @@
-<domain type='{{ libvirt_domain_type }}'>
+<domain type='kvm'>
   <name>{{ item.name }}</name>
   <memory unit='MiB'>{{ flavors[item.flavor].memory }}</memory>
-  <vcpu>{{ flavors[item.flavor].vcpu }}</vcpu>
-
-  {{baremetal_vm_xml|default('')}}
-
-{% if libvirt_arch != 'aarch64' %}
+  <vcpu placement='static'>{{ flavors[item.flavor].vcpu }}</vcpu>
   <os>
-{% if libvirt_arch == 'ppc64le' %}
-    <type arch='{{ libvirt_arch }}' machine='pseries-rhel8.6.0'>hvm</type>
-{% else %}
-    <type arch='{{ libvirt_arch }}' machine='q35'>hvm</type>
-{% endif %}
-{% if libvirt_arch != 'ppc64le' %}
-{% if libvirt_firmware  == 'uefi' %}
-     <loader readonly='yes' type='pflash'>/usr/share/OVMF/OVMF_CODE.fd</loader>
-{% if libvirt_secure_boot|bool %}
-     <nvram template="/usr/share/OVMF/OVMF_VARS.secboot.fd">/var/lib/libvirt/qemu/nvram/{{ item.name }}.fd</nvram>
-{% else %}
-     <nvram>/var/lib/libvirt/qemu/nvram/{{ item.name }}.fd</nvram>
-{% endif %}
-{% endif %}
-{% endif %}
+    <type arch='s390x' machine='s390-ccw-virtio-rhel8.6.0'>hvm</type>
     <boot dev='network'/>
-    <bootmenu enable='no'/>
-{% if libvirt_arch != 'ppc64le' %}
-    <bios useserial='yes' rebootTimeout='10000'/>
-{% endif %}
   </os>
-{% else %}
-<os firmware='efi'>
-  <type arch='aarch64' machine='virt-rhel8.2.0'>hvm</type>
-</os>
-{% endif %}
-
   <features>
     <acpi/>
     <apic/>
     <pae/>
   </features>
-{% if libvirt_domain_type == 'qemu' %}
-  <cpu mode='host-model'/>
-{% else %}
   <cpu mode='host-passthrough'/>
-{% endif %}
   <clock offset='utc'/>
   <on_poweroff>destroy</on_poweroff>
   <on_reboot>restart</on_reboot>
   <on_crash>restart</on_crash>
   <devices>
     <disk type="file" device="cdrom">
-{% if libvirt_arch == 'ppc64le' %}
       <target dev='{{ libvirt_cdromdev }}' bus='{{ libvirt_diskbus }}'/>
-{% else %}
-      <target dev='{{ libvirt_cdromdev }}' bus='{{ libvirt_cdrombus }}'/>
-{% endif %}
       <readonly/>
     </disk>
     <disk type='volume' device='disk'>
@@ -85,20 +49,10 @@
     </serial>
     <console type='pty'/>
 {% if enable_vnc_console|bool %}
-{% if libvirt_arch == 'ppc64le' %}
-    <target type='serial' port='0'/>
-    <address type='spapr-vio' reg='0x30000000'/>
-{% else %}
     <input type='mouse' bus='ps2'/>
     <graphics type='vnc' port='-1' autoport='yes'/>
-{% endif %}
     <video>
-{% if libvirt_arch == 'ppc64le' %}
-      <model type='vga' vram='16384' heads='1' primary='yes' />
-{% else %}
       <model type='cirrus' vram='9216' heads='1'/>
-{% endif %}
-
     </video>
 {% endif %}
 

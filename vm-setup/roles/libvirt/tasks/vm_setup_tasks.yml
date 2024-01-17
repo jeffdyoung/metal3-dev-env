@@ -95,7 +95,7 @@
 
     # Define (but do not start) the vm nodes.  These will be
     # booted later by ironic during the provisioning process.
-    - name: Define x86_64 vm vms
+    - name: Define x86_64 vms
       virt:
         name: "{{ item.name }}"
         command: define
@@ -104,7 +104,7 @@
       with_items: "{{ vm_nodes }}"
       when:
         - libvirt_arch == "x86_64"
-    - name: Define aarch64 vm vms
+    - name: Define aarch64 vms
       virt:
         name: "{{ item.name }}"
         command: define
@@ -113,7 +113,7 @@
       with_items: "{{ vm_nodes }}"
       when:
         - libvirt_arch == "aarch64"
-    - name: Define ppc64le vm vms
+    - name: Define ppc64le vms
       virt:
         name: "{{ item.name }}"
         command: define
@@ -122,7 +122,7 @@
       with_items: "{{ vm_nodes }}"
       when:
         - libvirt_arch == "ppc64le"
-    - name: Define s390x vm vms
+    - name: Define s390x vms
       virt:
         name: "{{ item.name }}"
         command: define
