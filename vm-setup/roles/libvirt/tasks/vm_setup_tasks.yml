@@ -103,7 +103,7 @@
         uri: "{{ libvirt_uri }}"
       with_items: "{{ vm_nodes }}"
       when:
-        - libvirt_arch == x86_64
+        - libvirt_arch == "x86_64"
     - name: Define aarch64 vm vms
       virt:
         name: "{{ item.name }}"
@@ -112,7 +112,7 @@
         uri: "{{ libvirt_uri }}"
       with_items: "{{ vm_nodes }}"
       when:
-        - libvirt_arch == aarch64
+        - libvirt_arch == "aarch64"
     - name: Define ppc64le vm vms
       virt:
         name: "{{ item.name }}"
@@ -121,7 +121,7 @@
         uri: "{{ libvirt_uri }}"
       with_items: "{{ vm_nodes }}"
       when:
-        - libvirt_arch == ppc64le
+        - libvirt_arch == "ppc64le"
     - name: Define s390x vm vms
       virt:
         name: "{{ item.name }}"
@@ -130,7 +130,7 @@
         uri: "{{ libvirt_uri }}"
       with_items: "{{ vm_nodes }}"
       when:
-        - libvirt_arch == s390x
+        - libvirt_arch == "s390x"
 
     # Create additional blockdevices for each objectstorage flavor node
     # These are sparse files, not using space if unused
